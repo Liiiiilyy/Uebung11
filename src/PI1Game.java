@@ -1,5 +1,8 @@
 import java.util.stream.Stream;
-
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 /**
  * Dies ist die Hauptklasse eines Spiels. Sie enthält die Hauptmethode, die zum
  * Starten des Spiels aufgerufen werden muss.
@@ -15,7 +18,7 @@ abstract class PI1Game extends Game
      *         die hier erzeugte Spielfigur fernsteuerbar.
      * @param port Der Port, über den die Fernsteuerverbindung läuft.
      */
-    public static void main(final String address, final int port)
+    public static void main1(final String address, final int port)
     {
         // Den Level erzeugen
         final Level level = new Level("levels/1.lvl", address, port);
@@ -33,4 +36,21 @@ abstract class PI1Game extends Game
 
         level.hide();
     }
+    public static int getAvailableTcpPort() {
+        try {
+            ServerSocket serverSocket = new ServerSocket(0);
+            int localPort = serverSocket.getLocalPort();
+            //这里一定要close(),不然这个端口无法被其他程序使用
+            serverSocket.close();
+            return localPort;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+    public static void main(String[] args)
+    {
+        main1("", getAvailableTcpPort());
+    }
+
 }
